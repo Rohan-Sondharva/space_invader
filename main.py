@@ -60,11 +60,19 @@ font = pygame.font.Font('freesansbold.ttf', 32)
 textX = 10
 textY = 10
 
+# Gamer Over Text
+game_over_font = pygame.font.Font('freesansbold.ttf', 64)
+
 
 # Show the score to screen
 def show_score(x, y):
     score = font.render("Score : " + str(score_value), True, (255, 255, 255))
     screen.blit(score, (x, y))
+
+# To show the game over text
+def gamer_over_text():
+    game_over_text = game_over_font.render("GAME OVER", True, (255, 255, 255))
+    screen.blit(game_over_text, (200, 250))
 
 
 # Drawing Player to Screen
@@ -144,6 +152,13 @@ while running:
 
     for i in range(num_of_enemies):
 
+        # Gamer Over
+        if enemyY[i] > 440:
+            for j in range(num_of_enemies):
+                enemyX[j] = 2000
+            gamer_over_text()
+            break
+
         # Add new position to Enemy
         enemyX[i] += enemyX_change[i]
 
@@ -160,7 +175,6 @@ while running:
 
         # Respawn enemy when being hit and increase score
         if collision:
-
             # To play the sound of explosion
             collision_sound = mixer.Sound('assets/collision.wav')
             collision_sound.play()
