@@ -1,7 +1,7 @@
 import math
 import random
-
 import pygame
+from pygame import mixer
 
 # Initialize the Pygame
 pygame.init()
@@ -11,6 +11,10 @@ screen = pygame.display.set_mode((800, 600))
 
 # Loading Background Image
 background = pygame.image.load('assets/background.png')
+
+# Background Music
+mixer.music.load('assets/background.wav')
+mixer.music.play(-1)
 
 # Title and Icon
 pygame.display.set_caption('Space Invaders')
@@ -117,6 +121,11 @@ while running:
                 # Only fires bullet when state is ready
                 if bullet_state == 'ready':
                     bulletX = playerX
+
+                    # To play bullet Sound
+                    bullet_sound = mixer.Sound('assets/bullet.wav')
+                    bullet_sound.play()
+
                     fire_bullet(playerX, bulletY)
 
         # Checks whether the key is released or not
@@ -134,6 +143,7 @@ while running:
         playerX = 736
 
     for i in range(num_of_enemies):
+
         # Add new position to Enemy
         enemyX[i] += enemyX_change[i]
 
@@ -150,6 +160,11 @@ while running:
 
         # Respawn enemy when being hit and increase score
         if collision:
+
+            # To play the sound of explosion
+            collision_sound = mixer.Sound('assets/collision.wav')
+            collision_sound.play()
+
             bulletY = 480
             bullet_state = 'ready'
             score_value += 1
