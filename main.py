@@ -26,7 +26,7 @@ enemyImg = pygame.image.load('assets/enemy.png')
 enemyX = random.randint(0, 736)
 enemyY = random.randint(50, 150)
 enemyX_change = 3
-enemyY_change = 30
+enemyY_change = 10
 
 # Adding bullet image and position
 # Ready - You can't see the Bullet
@@ -81,7 +81,10 @@ while running:
             if event.key == pygame.K_RIGHT:
                 playerX_change = 5
             if event.key == pygame.K_SPACE:
-                fire_bullet(playerX, bulletY)
+                # Only fires bullet when state is ready
+                if bullet_state == 'ready':
+                    bulletX = playerX
+                    fire_bullet(playerX, bulletY)
 
         # Checks whether the key is released or not
         if event.type == pygame.KEYUP:
@@ -108,9 +111,14 @@ while running:
         enemyX_change = -3
         enemyY += enemyY_change  # Move Enemy Down
 
+    # Reset bullet to original position after shot
+    if bulletY <= 0:
+        bulletY = 480
+        bullet_state = 'ready'
+
     # Bullet Movement
     if bullet_state == 'fire':
-        fire_bullet(playerX, bulletY)
+        fire_bullet(bulletX, bulletY)
         bulletY -= bulletY_change
 
     player(playerX, playerY)
