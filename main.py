@@ -22,7 +22,8 @@ playerX_change = 0
 enemyImg = pygame.image.load('assets/enemy.png')
 enemyX = random.randint(0, 736)
 enemyY = random.randint(50, 150)
-enemyX_change = 0
+enemyX_change = 0.3
+enemyY_change = 30
 
 
 # Drawing Player to Screen
@@ -69,6 +70,17 @@ while running:
         playerX = 0
     elif playerX >= 736:
         playerX = 736
+
+    # Add new position to Enemy
+    enemyX += enemyX_change
+
+    # Change direction of enemy when hit to boundary
+    if enemyX <= 0:
+        enemyX_change = 0.3
+        enemyY += enemyY_change  # Move Enemy Down
+    elif enemyX >= 736:
+        enemyX_change = -0.3
+        enemyY += enemyY_change  # Move Enemy Down
 
     player(playerX, playerY)
     enemy(enemyX, enemyY)
