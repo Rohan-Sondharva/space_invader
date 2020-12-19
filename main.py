@@ -1,6 +1,7 @@
-import pygame
 import math
 import random
+
+import pygame
 
 # Initialize the Pygame
 pygame.init()
@@ -23,11 +24,19 @@ playerY = 480
 playerX_change = 0
 
 # Adding enemy image and position
-enemyImg = pygame.image.load('assets/enemy.png')
-enemyX = random.randint(0, 735)
-enemyY = random.randint(50, 150)
-enemyX_change = 3
-enemyY_change = 10
+enemyImg = []
+enemyX = []
+enemyY = []
+enemyX_change = []
+enemyY_change = []
+num_of_enemies = 6
+
+for i in range(num_of_enemies):
+    enemyImg.append(pygame.image.load('assets/enemy.png'))
+    enemyX.append(random.randint(0, 735))
+    enemyY.append(random.randint(50, 150))
+    enemyX_change.append(3)
+    enemyY_change.append(10)
 
 # Adding bullet image and position
 # Ready - You can't see the Bullet
@@ -42,14 +51,15 @@ bullet_state = 'ready'
 # Score Variable that count how many time you hit enemy
 score = 0
 
+
 # Drawing Player to Screen
 def player(x, y):
     screen.blit(playerImg, (x, y))
 
 
 # Drawing enemy to Screen
-def enemy(x, y):
-    screen.blit(enemyImg, (x, y))
+def enemy(x, y, i):
+    screen.blit(enemyImg[i], (x, y))
 
 
 # Change the bullet state to Fire
@@ -60,7 +70,8 @@ def fire_bullet(x, y):
     screen.blit(bulletImg, (x + 16, y + 10))
 
 
-def Is_Collision(enemyX, enemyy, bulletX, bulletY):
+# Check Whether bullet is hit to enemy
+def is_Collision(enemyX, enemyY, bulletX, bulletY):
     distance = math.sqrt((math.pow(enemyX - bulletX, 2)) + (math.pow(enemyY - bulletY, 2)))
     if distance < 27:
         return True
@@ -111,16 +122,31 @@ while running:
     elif playerX >= 736:
         playerX = 736
 
-    # Add new position to Enemy
-    enemyX += enemyX_change
+    for i in range(num_of_enemies):
+        # Add new position to Enemy
+        enemyX[i] += enemyX_change[i]
 
-    # Change direction of enemy when hit to boundary
-    if enemyX <= 0:
-        enemyX_change = 3
-        enemyY += enemyY_change  # Move Enemy Down
-    elif enemyX >= 736:
-        enemyX_change = -3
-        enemyY += enemyY_change  # Move Enemy Down
+        # Change direction of enemy when hit to boundary
+        if enemyX[i] <= 0:
+            enemyX_change[i] = 3
+            enemyY[i] += enemyY_change[i]  # Move Enemy Down
+        elif enemyX[i] >= 736:
+            enemyX_change[i] = -3
+            enemyY[i] += enemyY_change[i]  # Move Enemy Down
+
+        # Collision
+        collision = is_Collision(enemyX[i], enemyY[i], bulletX, bulletY)
+
+        # Respawn enemy when being hit and increase score
+        if collision:
+            bulletY = 480
+            bullet_state = 'ready'
+            score += 1
+            print(score)
+            enemyX[i] = random.randint(0, 735)
+            enemyY[i] = random.randint(50, 150)
+
+        enemy(enemyX[i], enemyY[i], i)
 
     # Reset bullet to original position after shot
     if bulletY <= 0:
@@ -132,19 +158,7 @@ while running:
         fire_bullet(bulletX, bulletY)
         bulletY -= bulletY_change
 
-    collision = Is_Collision(enemyX, enemyY, bulletX, bulletY)
-
-    # Respawn enemy when being hit and increase score
-    if collision:
-        bulletY = 480
-        bullet_state = 'ready'
-        score += 1
-        print(score)
-        enemyX = random.randint(0, 735)
-        enemyY = random.randint(50, 150)
-
     player(playerX, playerY)
-    enemy(enemyX, enemyY)
 
     # Updating the Game Screen
     pygame.display.update()
