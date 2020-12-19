@@ -1,4 +1,5 @@
 import pygame
+import random
 
 # Initialize the Pygame
 pygame.init()
@@ -17,10 +18,21 @@ playerX = 370
 playerY = 480
 playerX_change = 0
 
+# Adding enemy image and position
+enemyImg = pygame.image.load('assets/enemy.png')
+enemyX = random.randint(0, 736)
+enemyY = random.randint(50, 150)
+enemyX_change = 0
+
 
 # Drawing Player to Screen
 def player(x, y):
     screen.blit(playerImg, (x, y))
+
+
+# Drawing enemy to Screen
+def enemy(x, y):
+    screen.blit(enemyImg, (x, y))
 
 
 running = True
@@ -51,6 +63,15 @@ while running:
 
     # Add new position to PlayerX
     playerX += playerX_change
-    player(playerX, playerY)
 
+    # Stop the spaceship to go beyond screen
+    if playerX <= 0:
+        playerX = 0
+    elif playerX >= 736:
+        playerX = 736
+
+    player(playerX, playerY)
+    enemy(enemyX, enemyY)
+
+    # Updating the Game Screen
     pygame.display.update()
