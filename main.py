@@ -13,7 +13,7 @@ screen = pygame.display.set_mode((800, 600))
 background = pygame.image.load('assets/background.png')
 
 # Background Music
-mixer.music.load('assets/background.wav')
+mixer.music.load('assets/therefore_i_am.wav')
 mixer.music.play(-1)
 
 # Title and Icon
@@ -68,6 +68,7 @@ game_over_font = pygame.font.Font('freesansbold.ttf', 64)
 def show_score(x, y):
     score = font.render("Score : " + str(score_value), True, (255, 255, 255))
     screen.blit(score, (x, y))
+
 
 # To show the game over text
 def gamer_over_text():
